@@ -1,4 +1,4 @@
-# sparta_AHA
+# sparta_AHA 와이어 프레임
 ## sparta 2조 AHA, Anymore Homeless Animals 와이어 프레임 
 
 ### 페이지 1. 최초 페이지
