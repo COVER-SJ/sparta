@@ -1,5 +1,5 @@
 # sparta_AHA
-sparta 2조 AHA, Anymore Homeless Animals 
+sparta 2조 AHA, Anymore Homeless Animals 와이어 프레임 
 
 페이지 1. 최초 페이지
 ![KakaoTalk_20220801_142109683](https://user-images.githubusercontent.com/108795153/182094353-5797652f-d4c4-4752-8470-f0c1fbc1a38e.jpg)
