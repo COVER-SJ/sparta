@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+
+    <title>Protect | AHA</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            font-family: 'Jua', sans-serif;
+        }
+
+        .wrap {
+            width: 900px;
+            margin: auto;
+        }
+
+        .container {
+            padding-left: 50px;
+        }
+
+        .posting-box > .custom-file {
+            margin-bottom: 20px;
+        }
+
+        .day {
+            color: gray;
+            font-size: 14px;
+            margin-bottom: 0;
+        }
+
+        .form-control {
+            margin-bottom: 5px;
+        }
+
+        .posting-box {
+            margin: 20px;
+        }
+
+        .card-columns {
+            flex-direction: column;
+        }
+
+    </style>
+
+    <script>
+        $(document).ready(function () {
+            bsCustomFileInput.init()
+            listing()
+            open_box()
+            close_box()
+        })
+
+        function listing() {
+            $.ajax({
+                type: "GET",
+                url: "/protect",
+                data: {},
+                success: function (response) {
+                    let animals = response['all_animal']
+                    for (let i = 0; i < animals.length; i++) {
+                        let place = animals[i]['place']
+                        let content = animals[i]['content']
+                        let file = animals[i]['file']
+                        let day = animals[i]['day']
+                        let kind = animals[i]['kind']
+
+                        let temp_html = `<div class="card">
+                                            <img src="../static/${file}" class="card-img-top">
+                                            <div class="card-body">
+                                                <p class="card-title">${place}</p>
+                                                <p class="품종">${kind}</p>
+                                                <p class="card-text">${content}</p>
+                                                <p class="day">${day}</p>
+                                            </div>
+                                            </div>`
+                        $('#cards-box').append(temp_html)
+                    }
+                }
+            })
+        }
+
+        function posting() {
+            let place = $('#place').val()
+            let content = $("#content").val()
+            let day = $('#day').val()
+            let kind = $("#kind").val()
+
+            let file = $('#file')[0].files[0]
+            let form_data = new FormData()
+
+            form_data.append("file_give", file)
+            form_data.append("place_give", place)
+            form_data.append("content_give", content)
+            form_data.append("kind_give", kind)
+            form_data.append("day_give", day)
+
+            $.ajax({
+                type: "POST",
+                url: "/animal",
+                data: form_data,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    alert(response["msg"])
+                    window.location.reload()
+                }
+            });
+        }
+
+
+        // 포스팅 박스 접기, 펼치기
+        function open_box() {
+            $('#post-box').show()
+        }
+
+        function close_box() {
+            $('#post-box').hide()
+        }
+    </script>
+</head>
+
+<body>
+<div class="wrap">
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+            <div class="posting-box">
+                <h1 onclick="location.href='/index'">Anymore Home Animals</h1>
+                <button onclick="open_box()">등록하기</button>
+            </div>
+            <div class="mypost" id="post-box">
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="file">
+                    <label class="custom-file-label" for="file">사진 선택하기</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <label>발견날짜</label>
+                    <input id="day" type="email" class="form-control" placeholder="yyyy-mm-dd">
+                    <input id="place" type="email" class="form-control2" placeholder="발견장소">
+                </div>
+                <div class="input-group mb-3">
+                    <select class="form-select" id="kind">
+                        <option selected>품종</option>
+                        <option value="1">개</option>
+                        <option value="2">고양이</option>
+                        <option value="3">기타</option>
+                    </select>
+                    <select class="form-select" id="inputGroupSelect02">
+                        <option selected>전체</option>
+                        <option value="1">믹스견</option>
+                        <option value="2">말티즈</option>
+                        <option value="3">요크셔테리어</option>
+                        <option value="4">리트리버</option>
+                        <option value="5">시베리안 허스키</option>
+                        <option value="6">불독</option>
+                        <option value="7">푸들</option>
+                        <option value="8">진돗개</option>
+                        <option value="9">풍산개</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>특징</label>
+                    <textarea class="form-control" id="content" rows="3" placeholder="내용입력"></textarea>
+                </div>
+
+                <div class="mybtns">
+                    <button onclick="posting()" type="button" class="btn btn-primary">저장하기</button>
+                    <button onclick="close_box()" type="button" class="btn btn-outline-dark">닫기</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="card-columns" id="cards-box">
+</div>
+</body>
+
+</html>
